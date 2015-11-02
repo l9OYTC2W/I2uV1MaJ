@@ -1,0 +1,57 @@
+Center_scripts_v1.0 updates:
+
+April 17, 2009:
+
+1. Fixed code cs_autoslice.m to handle contrast images that don't survive the p-threshold.
+
+March 10, 2009:
+
+1. Added an option to apply different threshold criteria like FDR and FWE to contrast images.
+
+Feb 26, 2009:
+
+1. Fixed the aspect ratio of contrast images (con*.jpg) when matlab -nodisplay command is used. 
+
+Feb 06, 2009:
+
+1. Fixed image calculation formulas in derivative boost code (cs_derivative_boost.m) when there are empty regressors and the image numbers have double 
+digit in it.
+
+May 13, 2008:
+
+1. Updated cs_stats.m, cs_autoslice.m, cs_derivative_boost.m and cs_db_autoslice.m files to handle empty regressors.
+
+Jan 11, 2008:
+
+1. Fixed cs_run_all.m file to handle the case when subject directories don’t have study directories inside. 
+2. cs_eliminate_bad_runs.m file is updated to eliminate the bad run directories automatically and therefore field csprefs.rerundir_regexp is redundant.
+3. Removed field csprefs.rerundir_regexp from preference files cs_prefs_aod_nifti.m and cs_prefs_aod_analyze.m.
+
+Jan 08, 2008:
+
+1. Updated cs_run_all.m, cs_prefs_aod_analyze.m and cs_prefs_aod_nifti.m files to include regular expression (csprefs.rerundir_regexp) 
+for re-run directories.
+2. Included function cs_eliminate_bad_runs.m to eliminate the bad run directories based on regular expression in field csprefs.rerundir_regexp.
+3. cs_db_autoslice.m function is updated to use zero order interpolation for display slices.
+
+Dec 13, 2007:
+
+Squared realignment parameters are written in a file with prefix “sq_rp_”.
+
+
+Nov 29, 2007:
+
+1. Variable csprefs.file_useregexp is used in preference file to list files based on regular expression. The following files are modified to 
+include this feature:
+	a) cs_run_all.m
+	b) cs_normalize.m
+	c) cs_list_files.m
+	
+2. Postscript and jpeg files are written using the convention (SubjectID_*_runID*.*). The following files are modified:
+	a) cs_realign.m
+	b) cs_normalize.m
+
+Nov 21, 2007:
+
+cs_autoslice function is fixed to use zero order interpolation for display slices. Option is provided in preference file to select the order of 
+interpolation.

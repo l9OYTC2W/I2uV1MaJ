@@ -1,0 +1,53 @@
+# this is for left button-short, right button-tall
+
+var     stims=0               # count the number of stimuli
+var     response=0                # count the number of responses
+var     targets=0
+var 	novels=0
+var	    stands=0
+				 
+#device  gameport        gp        "sab1=201 sab2=200 sbb1=201 sbb2=200"
+device  keyboard        kb 
+device  serial          scanner   "port=2 baud=9600 display=0" 
+device  serial          stim      "port=1 baud=9600"
+device  erpss           of        "name=aodsxx.log display=0"
+
+#device  erpss           of      "name=SSrghtsm.log  display=0"   
+#device  parallel        scan      "port=1"
+#device serial           scan      "port=2 baud=9600"
+#device dig              scan
+
+
+.{kb:'q'}    # on keyboard input 1 (escape), abort
+       abort           
+     end
+.{kb:'c'}    #  clear on hitting the 'c'
+	stims=0 
+	end
+# on any stim input, send to log files, increment count
+.{stim:*}
+        of=$1   
+        stims=plus (stims,1)
+        end
+.{scanner:*}
+	of=$1
+        scan=plus (scan,1)
+        end
+
+# on any response input increment count
+.{stim:52}
+	response=plus (response,1)
+	end
+
+#  targets - target followed by response code 52           
+.{stim:7}
+	targets=plus (targets,1)
+end
+#  novels - novel not followed by response code 52
+.{stim:8}
+	novels=plus (novels,1)
+end
+#  standards - standard not followed by response code 52            
+.{stim:9}
+	stands=plus (stands,1)
+end

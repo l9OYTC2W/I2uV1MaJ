@@ -1,0 +1,68 @@
+# this is for left button-short, right button-tall
+
+var     stims=0               # count the number of stimuli
+var     response=0                # count the number of responses
+var     TRG_PR=0
+var 	NOV_OM=0
+var	    STD_OM=0
+var	    TRG_OM=0
+var	    NOV_PR=0
+var	    STD_PR=0						 
+#device  gameport        gp        "sab1=201 sab2=200 sbb1=201 sbb2=200"
+device  keyboard        kb 
+device  serial          scanner   "port=2 baud=9600 display=0" 
+device  serial          stim      "port=1 baud=9600"
+device  erpss           of        "name=aodsxx.log display=0"
+
+#device  erpss           of      "name=SSrghtsm.log  display=0"   
+#device  parallel        scan      "port=1"
+#device serial           scan      "port=2 baud=9600"
+#device dig              scan
+
+
+.{kb:'q'}    # on keyboard input 1 (escape), abort
+       abort           
+     end
+.{kb:'c'}    #  clear on hitting the 'c'
+	stims=0 
+	end
+# on any stim input, send to log files, increment count
+.{stim:*}
+        of=$1   
+        stims=plus (stims,1)
+        end
+.{scanner:*}
+	of=$1
+        scan=plus (scan,1)
+        end
+
+# on any response input increment count
+.{stim:53}
+	response=plus (response,1)
+	end
+
+#  TRG_PR - target followed by response code 53           
+.{stim:7}{stim:t<100..1500>53}
+	TRG_PR=plus (TRG_PR,1)
+end
+#  NOV_OM - novel not followed by response code 53
+.{stim:8}{stim:t<100..1500>~53}
+	NOV_OM=plus (NOV_OM,1)
+end
+#  STD_OM - standard not followed by response code 53            
+.{stim:9}{stim:t<100..1500>~53}
+	STD_OM=plus (STD_OM,1)
+end
+#  TRG_OM - target not followed by response code 53            
+.{stim:7}{stim:t<100..1500>~53}
+	TRG_OM=plus (TRG_OM,1)
+end
+# NOV_PR N- OV_OM - novel followed by response code 53
+.{stim:8}{stim:t<100..1500>53}
+	NOV_PR=plus (NOV_PR,1)
+end
+# STD_PR
+- standard followed by a response code 53
+.{stim:9}{stim:t<100..1500>53}
+	STD_PR=plus (STD_PR,1)
+end
