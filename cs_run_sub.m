@@ -16,7 +16,7 @@ end
 spmVersion = spm('ver');
 
 if ~strcmpi(spmVersion, 'spm5')
-    error(['This version of center scripts works only with spm5']);
+%     error(['This version of center scripts works only with spm5']);
 end
 
 if ~exist('prefs_files', 'var')

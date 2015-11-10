@@ -45,7 +45,7 @@ if (csprefs.determine_params)
         matname                     = fullfile(path,[filename '_sn.mat']);
     end
 
-    VWG                         = defaults.normalise.estimate.weight;
+    VWG                         = defaults.old.normalise.estimate.weight;
     if (strcmp(csprefs.params_source_weight,''))
         VWF                         = '';
     else
@@ -56,7 +56,7 @@ if (csprefs.determine_params)
             error( 'Incorrect # of files specified by csprefs.params_source_weight' );
         end
     end
-    flags                       = defaults.normalise.estimate;
+    flags                       = defaults.old.normalise.estimate;
 
     spm_normalise( VG,VF,matname,VWG,VWF,flags );
 
@@ -97,7 +97,7 @@ if (csprefs.write_normalized)
             error( 'Incorrect # of files specified by csprefs.writenorm_matname' );
         end
     end
-    flags                       = defaults.normalise.write;
+    flags                       = defaults.old.normalise.write;
 
     spm_write_sn( V,matname,flags );
 

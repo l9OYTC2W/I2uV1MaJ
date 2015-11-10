@@ -141,6 +141,13 @@ for nSub = 1:length(sub_dir)
         end
     end
     
+    % Slice time correction
+    if isfield(csprefs,'run_slicetime') && csprefs.run_slicetime
+        for i=1:length(im_dirs)
+            cs_slicetime( im_dirs{i} );
+        end
+    end
+    
     % Realign
     if ( csprefs.run_realign )
         for i=1:length(im_dirs)
@@ -152,13 +159,6 @@ for nSub = 1:length(sub_dir)
     if (isfield(csprefs, 'run_coregister')) && (csprefs.run_coregister)
         for i = 1:length(im_dirs)
             cs_coregister(im_dirs{i});
-        end
-    end
-    
-    % Slice time correction
-    if isfield(csprefs,'run_slicetime') && csprefs.run_slicetime
-        for i=1:length(im_dirs)
-            cs_slicetime( im_dirs{i} );
         end
     end
     

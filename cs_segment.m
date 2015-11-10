@@ -81,7 +81,7 @@ greyMatterFile = fullfile(fileparts(which('spm.m')), 'apriori', 'grey.nii');
 
 res           = spm_preproc(job.data{1},job.opts);
 [sn(1),isn]   = spm_prep2sn(res);
-[pth, nam, extn]     = spm_fileparts(job.data{1});
+[pth,nam,ext] = spm_fileparts(job.data{i});
 savefields(fullfile(pth, [nam '_seg_sn.mat']), sn(1));
 savefields(fullfile(pth, [nam '_seg_inv_sn.mat']), isn);
 
@@ -119,7 +119,7 @@ opts  = job.output;
 sopts = [opts.GM;opts.WM;opts.CSF];
 vf    = cell(numel(job.data),2);
 for i=1:numel(job.data),
-    [pth,nam,ext,num] = spm_fileparts(job.data{i});
+    [pth,nam,ext] = spm_fileparts(job.data{i});
     vf{i,1} = fullfile(pth,[nam '_seg_sn.mat']);
     vf{i,2} = fullfile(pth,[nam '_seg_inv_sn.mat']);
     j       = 3;
