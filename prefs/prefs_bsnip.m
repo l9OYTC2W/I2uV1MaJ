@@ -32,9 +32,10 @@ csprefs.run_reorient            = 0;
 csprefs.run_realign             = 0;
 csprefs.run_coregister          = 0;
 csprefs.run_slicetime           = 0;
-csprefs.run_normalize           = 1;
+csprefs.run_normalize           = 0;
 csprefs.run_smooth              = 0;
 csprefs.run_filter              = 0;
+csprefs.run_despike             = 1;
 csprefs.run_stats               = 0;
 % Added option to use SPM results button
 csprefs.run_spm_results         = 0; 
@@ -68,7 +69,7 @@ csprefs.run_segment             = 0;
 csprefs.exp_dir                 = '/media/mrn/data/SubjectData/'; 
 csprefs.logfile                 = '/media/mrn/data/SubjectData/cs_log.txt'; 
 csprefs.errorlog                = '/media/mrn/data/SubjectData/cs_errorlog.txt'; 
-csprefs.spm_defaults_dir        = '/media/mrn/tools/center_scripts_v1.0/';
+csprefs.spm_defaults_dir        = '/media/mrn/tools/spm12/';
 csprefs.scandir_regexp          = '\w+'; %'\<\d{8}_\d{6}_\d{8}\>';
 csprefs.rundir_regexp           = '.*'; % Match decimal number exactly
 csprefs.scandir_postpend        = ''; % Leave it as empty if subject directories don't have additional path like Study
@@ -169,12 +170,12 @@ csprefs.write_reorient = 0;
 
 csprefs.coregister              = 1;
 csprefs.reslice                 = 1;
-csprefs.use_inrialign           = 0;
-csprefs.realign_pattern         = 'S*.nii';
+csprefs.use_inrialign           = 1;
+csprefs.realign_pattern         = 'aS*.nii';
 csprefs.inrialign_rho           = 'geman';
 csprefs.inrialign_cutoff        = 2.5;
 csprefs.inrialign_quality       = 1.0;
-csprefs.realign_fwhm            = 8;
+csprefs.realign_fwhm            = 6;
 %there is also some flag called 'sep' in both realign functions. I don't know what it does, hence I'm leaving it at default for now.
 csprefs.realign_rtm             = 0;
 csprefs.realign_pw              = '';
@@ -212,7 +213,7 @@ csprefs.reslice_write_mean      = 1;
 
 csprefs.run_coreg = 1;
 csprefs.run_reslice = 1;
-csprefs.coreg.ref = '/media/mrn/tools/spm5/templates/EPI.nii'; 
+csprefs.coreg.ref = '/media/mrn/tools/spm12/templates/EPI.nii'; 
 csprefs.coreg.source = 's0*-0007*.img'; 
 csprefs.coreg.other_pattern = 's0*.img'; % Leave '' if you don't specify other images
 csprefs.coreg.write.ref = '/export/research/analysis/human/collaboration/olin/users/srinivas/testDicom/fsw050314990007.img';
@@ -240,8 +241,8 @@ csprefs.coreg.write.ref = '/export/research/analysis/human/collaboration/olin/us
 
 
 csprefs.slicetime_pattern	=   'S*.nii';
-csprefs.sliceorder              = [1:1:29];
-csprefs.refslice                = 15;
+csprefs.sliceorder              = [1:1:36];
+csprefs.refslice                = 18;
 csprefs.ta                      = 'default';
 
 
@@ -283,10 +284,10 @@ csprefs.ta                      = 'default';
 
 csprefs.determine_params        = 1;
 csprefs.write_normalized        = 1;
-csprefs.params_template         = '/media/mrn/tools/spm5/templates/EPI.nii'; %'/opt/local/spm2/templates/EPI.mnc';
-csprefs.params_pattern          = 'meanS*.nii';
+csprefs.params_template         = '/media/mrn/tools/spm12/toolbox/OldNorm/EPI.nii'; %'/opt/local/spm2/templates/EPI.mnc';
+csprefs.params_pattern          = 'meanaS*.nii';
 csprefs.params_source_weight    = '';
-csprefs.writenorm_pattern       = 'aS*run*.nii';
+csprefs.writenorm_pattern       = 'raS*.nii';
 csprefs.writenorm_matname       = '';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -296,7 +297,7 @@ csprefs.writenorm_matname       = '';
 % csprefs.smooth_pattern        : specifies a pattern identifying which image files should be smoothed. Literals and wildcards (*) only
 
 csprefs.smooth_kernel           = [10 10 10];
-csprefs.smooth_pattern          = 'waS*.nii';
+csprefs.smooth_pattern          = 'wraS*.nii';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_FILTER
@@ -305,8 +306,17 @@ csprefs.smooth_pattern          = 'waS*.nii';
 %                                   instead, but I doubt it's necessary
 % csprefs.cutoff_freq           : to be honest, I don't really know what this is
 
-csprefs.filter_pattern          = 'swaS*run*.nii';
-csprefs.cutoff_freq             = .25;
+csprefs.filter_pattern          = 'swraS*.nii';
+csprefs.cutoff_freq             = .08;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SETTINGS PERTAINING TO CS_DESPIKE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% csprefs.despike_bin           : 
+% csprefs.despike_pattern       : 
+
+csprefs.despike_bin             = '/media/mrn/tools/center_scripts_v1.01/3dDespike';
+csprefs.despike_pattern         = 'fswraS*.nii';
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

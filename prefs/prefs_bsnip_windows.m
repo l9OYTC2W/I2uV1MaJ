@@ -28,12 +28,12 @@ addpath(fileparts(which('display_slices.m')));
 
 csprefs.run_beh_matchup         = 0;
 csprefs.run_dicom_convert       = 0;
-csprefs.run_realign             = 1;
+csprefs.run_realign             = 0;
 csprefs.run_reorient            = 0;
 csprefs.run_coregister          = 0;
-csprefs.run_slicetime           = 1;
-csprefs.run_normalize           = 1;
-csprefs.run_smooth              = 1;
+csprefs.run_slicetime           = 0;
+csprefs.run_normalize           = 0;
+csprefs.run_smooth              = 0;
 csprefs.run_filter              = 0;
 csprefs.run_stats               = 0;
 % Added option to use SPM results button

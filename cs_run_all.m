@@ -183,6 +183,13 @@ for nSub = 1:length(sub_dir)
         end
     end
     
+    % Despike
+    if ( csprefs.run_despike )
+        for i=1:length(im_dirs)
+            cs_despike( im_dirs{i} );
+        end
+    end
+    
     % Stats
     if ( csprefs.run_stats  )
         cs_stats( im_dirs );
