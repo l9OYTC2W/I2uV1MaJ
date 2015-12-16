@@ -352,7 +352,7 @@ for i=1:length(hdr),
             strcmp(hdr{i}.Modality,'PT') || strcmp(hdr{i}.Modality,'CT'))
         disp(['Cant find appropriate modality information for "' hdr{i}.Filename '".']);
         guff = {guff{:},hdr{i}};
-    elseif ~(checkfields(hdr{i},'StartOfPixelData','SamplesperPixel',...
+    elseif ~(checkfields(hdr{i},'StartOfPixelData','SamplesPerPixel',...
             'Rows','Columns','BitsAllocated','BitsStored','HighBit','PixelRepresentation')||isfield(hdr{i},'Private_7fe1_0010')),
         disp(['Cant find "Image Pixel" information for "' hdr{i}.Filename '".']);
         guff = {guff{:},hdr{i}};

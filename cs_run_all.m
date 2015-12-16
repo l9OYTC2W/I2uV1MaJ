@@ -135,7 +135,7 @@ for nSub = 1:length(sub_dir)
     % Reorientation
     if isfield(csprefs, 'run_reorient')
         if (csprefs.run_reorient)
-            for i = 1:length(im_dirs)
+            parfor i = 1:length(im_dirs)
                 cs_reorient(im_dirs{i});
             end
         end
@@ -173,6 +173,13 @@ for nSub = 1:length(sub_dir)
     if ( csprefs.run_smooth )
         for i=1:length(im_dirs)
             cs_smooth( im_dirs{i} );
+        end
+    end
+    
+    % Detrending
+    if ( csprefs.run_detrend )
+        for i=1:length(im_dirs)
+            cs_detrend( im_dirs{i} );
         end
     end
     

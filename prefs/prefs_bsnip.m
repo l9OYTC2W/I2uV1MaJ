@@ -29,14 +29,15 @@ addpath(fileparts(which('display_slices.m')));
 csprefs.run_beh_matchup         = 0;
 csprefs.run_dicom_convert       = 0;
 csprefs.run_reorient            = 0;
-csprefs.run_realign             = 0;
+csprefs.run_realign             = 1;
 csprefs.run_coregister          = 0;
-csprefs.run_slicetime           = 0;
-csprefs.run_normalize           = 0;
-csprefs.run_smooth              = 0;
-csprefs.run_filter              = 0;
+csprefs.run_slicetime           = 1;
+csprefs.run_normalize           = 1;
+csprefs.run_smooth              = 1;
+csprefs.run_filter              = 1;
 csprefs.run_despike             = 1;
 csprefs.run_stats               = 0;
+csprefs.run_detrend             = 0;
 % Added option to use SPM results button
 csprefs.run_spm_results         = 0; 
 csprefs.run_autoslice           = 0;
@@ -104,9 +105,9 @@ csprefs.digits                  = [3,4];
 % csprefs.dicom.outputDir - Files converted from DICOM will be placed in
 % this directory. 
 
-csprefs.dicom.file_pattern = 'Ser*.dcm';
-csprefs.dicom.format = '4d_nifti';
-csprefs.dicom.write_file_prefix = 'aod';
+csprefs.dicom.file_pattern = '0000*.dcm';
+csprefs.dicom.format = '3d_nifti';
+csprefs.dicom.write_file_prefix = '';
 csprefs.dicom.outputDir = ''; % Leave it as empty '' or [] if you want the files to be placed in the run directory
 
 
