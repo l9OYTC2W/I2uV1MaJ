@@ -132,10 +132,19 @@ for nSub = 1:length(sub_dir)
         cs_dummies(subject_directory, im_dirs);
     end
     
+    % Discard time points
+    if isfield(csprefs, 'run_discard')
+        if csprefs.run_discard
+            for i = 1:length(im_dirs)
+                cs_discard_timepoints(im_dirs{i});
+            end
+        end
+    end
+    
     % Reorientation
     if isfield(csprefs, 'run_reorient')
         if (csprefs.run_reorient)
-            parfor i = 1:length(im_dirs)
+            for i = 1:length(im_dirs)
                 cs_reorient(im_dirs{i});
             end
         end
