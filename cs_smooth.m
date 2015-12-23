@@ -1,7 +1,5 @@
-function cs_smooth( directory )
+function cs_smooth( directory, csprefs )
 % Performs smoothing on images in a directory.
-
-global csprefs;
 
 progFile=fullfile(pwd,'cs_progress.txt');
 cs_log( ['Beginning cs_smooth for ',fullfile(pwd,directory)], progFile );

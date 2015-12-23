@@ -1,8 +1,5 @@
-function cs_normalize( directory )
+function cs_normalize( directory, csprefs, defaults )
 % Performs spatial normalization on all images in a directory.
-
-global csprefs;
-global defaults;
 
 orig_dir=pwd;
 cd(directory);

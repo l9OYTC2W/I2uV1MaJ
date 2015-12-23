@@ -1,8 +1,5 @@
-function cs_despike( directory )
+function cs_despike( directory, csprefs, defaults )
 % Performs despiking on all images in a directory.
-
-global csprefs;
-global defaults;
 
 V = cs_list_files(fullfile(pwd, directory), csprefs.despike_pattern, 'fullpath');
 if (isempty(V))

@@ -1,6 +1,8 @@
 function cs_spm_print(fileName)
 % Use spm print function
 
+return;
+
 global defaults;
 
 % Store old value
@@ -9,7 +11,6 @@ uiPrint = defaults.ui.print;
 [pathstr, fName, extn] = fileparts(fileName);
 
 figHandle = spm_figure('FindWin','Graphics');
-
 
 %% Capture frame
 try

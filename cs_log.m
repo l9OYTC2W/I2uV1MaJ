@@ -1,5 +1,7 @@
 function cs_log( str, file, nodate )
 
+return;
+
 global csprefs;
 
 if ( nargin < 2 )

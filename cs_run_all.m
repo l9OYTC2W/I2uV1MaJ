@@ -7,8 +7,10 @@ function cs_run_all( prefs_filename, sub_dir )
 % 2. sub_dir - fullfile path of the subject directory to be processed.
 %
 
+tic;
 global csprefs;
 global FILE_USEREGEXP;
+global defaults;
 
 start_dir = pwd;
 
@@ -123,20 +125,29 @@ for nSub = 1:length(sub_dir)
     % Find good runs
     im_dirs = cs_eliminate_bad_runs(im_dirs);
     
-    if ( csprefs.run_beh_matchup )
+    if csprefs.run_beh_matchup
         cs_beh_matchup;
     end
     
     
-    if ( csprefs.dummyscans > 0 )
+    if csprefs.dummyscans > 0
         cs_dummies(subject_directory, im_dirs);
+    end
+    
+    % Rename
+    if isfield(csprefs, 'run_rename')
+        if csprefs.run_rename
+            parfor i = 1:length(im_dirs)
+                cs_rename(im_dirs{i}, csprefs);
+            end
+        end
     end
     
     % Discard time points
     if isfield(csprefs, 'run_discard')
         if csprefs.run_discard
-            for i = 1:length(im_dirs)
-                cs_discard_timepoints(im_dirs{i});
+            parfor i = 1:length(im_dirs)
+                cs_discard_timepoints(im_dirs{i}, csprefs);
             end
         end
     end
@@ -150,74 +161,74 @@ for nSub = 1:length(sub_dir)
         end
     end
     
-    % Slice time correction
-    if isfield(csprefs,'run_slicetime') && csprefs.run_slicetime
-        for i=1:length(im_dirs)
-            cs_slicetime( im_dirs{i} );
+    % Realign
+    if csprefs.run_realign
+        parfor i=1:length(im_dirs)
+            cs_realign( im_dirs{i}, csprefs, defaults );
         end
     end
     
-    % Realign
-    if ( csprefs.run_realign )
-        for i=1:length(im_dirs)
-            cs_realign( im_dirs{i} );
+    % Slice time correction
+    if isfield(csprefs,'run_slicetime') && csprefs.run_slicetime
+        parfor i=1:length(im_dirs)
+            cs_slicetime( im_dirs{i}, csprefs );
         end
     end
     
     % Coregister
-    if (isfield(csprefs, 'run_coregister')) && (csprefs.run_coregister)
+    if isfield(csprefs, 'run_coregister') && csprefs.run_coregister
         for i = 1:length(im_dirs)
             cs_coregister(im_dirs{i});
         end
     end
     
     % Normalize
-    if ( csprefs.run_normalize )
-        for i=1:length(im_dirs)
-            cs_normalize( im_dirs{i} );
+    if csprefs.run_normalize
+        parfor i=1:length(im_dirs)
+            cs_normalize( im_dirs{i}, csprefs, defaults );
         end
     end
     
     % Smoothing
-    if ( csprefs.run_smooth )
-        for i=1:length(im_dirs)
-            cs_smooth( im_dirs{i} );
+    if csprefs.run_smooth
+        parfor i=1:length(im_dirs)
+            cs_smooth( im_dirs{i}, csprefs );
         end
     end
     
     % Detrending
-    if ( csprefs.run_detrend )
-        for i=1:length(im_dirs)
-            cs_detrend( im_dirs{i} );
+    if csprefs.run_detrend
+        parfor i=1:length(im_dirs)
+            cs_detrend( im_dirs{i}, csprefs, defaults );
         end
     end
     
     % Filter
-    if ( csprefs.run_filter )
+    if csprefs.run_filter
         for i=1:length(im_dirs)
             cs_filter( im_dirs{i} );
         end
     end
     
     % Despike
-    if ( csprefs.run_despike )
-        for i=1:length(im_dirs)
-            cs_despike( im_dirs{i} );
+    if csprefs.run_despike
+        parfor i=1:length(im_dirs)
+            cs_despike( im_dirs{i}, csprefs, defaults );
         end
     end
     
     % Stats
-    if ( csprefs.run_stats  )
+    if csprefs.run_stats
         cs_stats( im_dirs );
     end
     
     % Display Slices
-    if ( isfield(csprefs,'run_autoslice') && csprefs.run_autoslice )
+    if isfield(csprefs,'run_autoslice') && csprefs.run_autoslice
         cs_autoslice;
     end
     
     % Derivative Boost
-    if ( isfield(csprefs,'run_deriv_boost') && csprefs.run_deriv_boost )
+    if isfield(csprefs,'run_deriv_boost') && csprefs.run_deriv_boost
         cs_derivative_boost;
     end
     
@@ -231,9 +242,11 @@ for nSub = 1:length(sub_dir)
     end
     
     % Run SPM Results button
-    if (isfield(csprefs, 'run_spm_results') && (csprefs.run_spm_results))
+    if isfield(csprefs, 'run_spm_results') && csprefs.run_spm_results
         cs_spm_results;
     end
+    
+    folderize(sub_dir, im_dirs);
     
     cd(start_dir);
     cs_log(['CenterScripts ran successfully for ', subject_directory]);
@@ -244,6 +257,7 @@ end
 cd(start_dir);
 
 clear global FILE_USEREGEXP;
+toc
 
 
 function [sub_dir, good_im_dirs] = get_sub_dirs(sub_dir, subRegExpStr, sessRegExpStr, rundir_postpend)
@@ -344,3 +358,75 @@ end
 for nStr = 1:length(myStr)
     regExpStr = [regExpStr, myStr{nStr}, '\', filesep];
 end
+
+function folderize(sub_dir, im_dirs)
+
+global csprefs;
+global defaults;
+
+% Realign
+if csprefs.run_realign
+    cs_log('Moving realigned images', 'cs_progress.txt');
+    for i=1:length(im_dirs)
+        dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, 'realigned');
+        mkdir(dest);
+        movefile( [im_dirs{i} filesep defaults.realign.write.prefix csprefs.realign_pattern], dest );
+        movefile( [im_dirs{i} filesep 'sq_rp_S*.txt'], dest );
+    end
+end
+
+% Slice time correction
+if csprefs.run_slicetime
+    cs_log('Moving slice time corrected images', 'cs_progress.txt');
+    parfor i=1:length(im_dirs)
+        dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, 'slicetimed');
+        mkdir(dest);
+        movefile( [im_dirs{i} filesep defaults.slicetiming.prefix csprefs.slicetime_pattern], dest );
+    end
+end
+
+% Normalize
+if csprefs.run_normalize
+    cs_log('Moving normalized images', 'cs_progress.txt');
+    parfor i=1:length(im_dirs)
+        dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, 'normalized');
+        mkdir(dest);
+        movefile( [im_dirs{i} filesep defaults.normalise.write.prefix csprefs.writenorm_pattern], dest );
+    end
+end
+
+% Smoothing
+if csprefs.run_smooth
+    cs_log('Moving smoothed images', 'cs_progress.txt');
+    parfor i=1:length(im_dirs)
+        dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, 'smoothed');
+        mkdir(dest);
+        movefile( [im_dirs{i} filesep defaults.smooth.prefix csprefs.smooth_pattern], dest );
+    end
+end
+
+% Detrending
+if csprefs.run_detrend
+    cs_log('Moving detrended images', 'cs_progress.txt');
+    parfor i=1:length(im_dirs)
+        dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, 'detrended');
+        mkdir(dest);
+        movefile( [im_dirs{i} filesep defaults.detrend.prefix csprefs.detrend_pattern], dest );
+    end
+end
+
+% Despike
+if csprefs.run_despike
+    cs_log('Moving despiked images', 'cs_progress.txt');
+    parfor i=1:length(im_dirs)
+        dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, 'despiked');
+        mkdir(dest);
+        movefile( [im_dirs{i} filesep defaults.despike.prefix csprefs.despike_pattern], dest );
+    end
+end
+
+function str = folderizeDestination(sub_dir, im_dir, csprefs, step)
+str = strsplit(im_dir, '_');
+str = str(end);
+[t1 t2] = fileparts(sub_dir{1});
+str = [csprefs.exp_dir filesep step filesep t2 filesep str{1}];

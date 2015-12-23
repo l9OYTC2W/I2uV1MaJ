@@ -1,7 +1,4 @@
-function cs_realign( directory )
-
-global csprefs;
-global defaults;
+function cs_realign( directory, csprefs, defaults )
 
 orig_dir=pwd;
 cd(directory);

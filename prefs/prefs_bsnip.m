@@ -7,11 +7,12 @@ function prefs_bsnip(initGraphics)
 global csprefs;
 global defaults;
 
+csprefs.initGraphics = initGraphics;
 if ~exist('initGraphics', 'var')
     initGraphics = 1;
 end
 
-%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%
 % PATH CHANGES HERE
 %%%%%%%%%%%%%%%%%%%
 
@@ -21,19 +22,20 @@ addpath(fileparts(which('inria_realign.m')));
 % Slice overlay
 addpath(fileparts(which('display_slices.m')));
 
-%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%
 % PROCESSING STEPS TO RUN
 %%%%%%%%%%%%%%%%%%%%%%%%%
 % indicate 1 to run that step, 0 not to run it
 
 csprefs.run_dicom_convert       = 0;
+csprefs.run_rename              = 1;
 csprefs.run_discard             = 0;
-csprefs.run_slicetime           = 0;
-csprefs.run_realign             = 0;
+csprefs.run_realign             = 1;
+csprefs.run_slicetime           = 1;
 csprefs.run_coregister          = 0;
-csprefs.run_normalize           = 0;
-csprefs.run_smooth              = 0;
-csprefs.run_detrend             = 0;
+csprefs.run_normalize           = 1;
+csprefs.run_smooth              = 1;
+csprefs.run_detrend             = 1;
 csprefs.run_filter              = 0;
 csprefs.run_despike             = 1;
 csprefs.run_beh_matchup         = 0;
@@ -45,7 +47,7 @@ csprefs.run_autoslice           = 0;
 csprefs.run_deriv_boost         = 0; 
 csprefs.run_segment             = 0; 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % GENERAL SETTINGS... FOR ALL CENTERSCRIPTS FUNCTIONS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % csprefs.exp_dir               : experimental directory
@@ -72,7 +74,7 @@ csprefs.exp_dir                 = '/export/mialab/users/salman/data/SubjectData'
 csprefs.logfile                 = '/export/mialab/users/salman/data/SubjectData/cs_log.txt'; 
 csprefs.errorlog                = '/export/mialab/users/salman/data/SubjectData/cs_errorlog.txt'; 
 csprefs.spm_defaults_dir        = '/export/mialab/users/salman/tools/spm12';
-csprefs.scandir_regexp          = '\w+'; %'\<\d{8}_\d{6}_\d{8}\>';
+csprefs.scandir_regexp          = '(Chicago|Dallas|Detroit|Hartford)'; %'\<\d{8}_\d{6}_\d{8}\>';
 csprefs.rundir_regexp           = '.*'; % Match decimal number exactly
 csprefs.scandir_postpend        = ''; % Leave it as empty if subject directories don't have additional path like Study
 csprefs.rundir_postpend         = ''; % Leave it as empty if run directories don't have additional path like Original/Nifti
@@ -80,7 +82,7 @@ csprefs.file_useregexp          = 0; % Option for using regular expressions for 
 csprefs.dummyscans              = 0; % Option for moving dummy scans to dummies directory. Only files with realignment pattern (csprefs.realign_pattern) will be moved.
 csprefs.tr                      = 2;
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_BEH_MATCHUP
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % csprefs.beh_queue_dir         : directory where beh data is queued up
@@ -91,7 +93,7 @@ csprefs.beh_queue_dir           = '/shasta/data1/aod_queue/';
 csprefs.digits                  = [3,4];
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_DICOM_CONVERT
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % csprefs.dicom.file_pattern - File pattern for dicom files.
@@ -112,17 +114,27 @@ csprefs.dicom.write_file_prefix = '';
 csprefs.dicom.outputDir = ''; % Leave it as empty '' or [] if you want the files to be placed in the run directory
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SETTINGS PERTAINING TO CS_RENAME
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% todo: For now this is full custom.
+
+
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_DISCARD
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % csprefs.discard_timepoints    : 
+% csprefs.keep_original         :
 
+csprefs.discard_pattern         = 'S*.nii';
 csprefs.discard_timepoints      = 10;
+csprefs.keep_original           = 1;
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_REORIENT
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 1. csprefs.reorient_pattern: Specify pattern for images to be re-oriented.
 %
 % 2. csprefs.reorient_vector: Affine transformation matrix will be obtained
@@ -152,7 +164,7 @@ csprefs.reorient_vector = [0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0];
 csprefs.write_reorient = 0;
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_REALIGN
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % csprefs.coregister            : whether to coregister (i.e., run inria_realign or spm_realign). 1 for yes, 0 for no
@@ -181,7 +193,7 @@ csprefs.write_reorient = 0;
 csprefs.coregister              = 1;
 csprefs.reslice                 = 1;
 csprefs.use_inrialign           = 1;
-csprefs.realign_pattern         = 'aS*.nii';
+csprefs.realign_pattern         = 'S*.nii';
 csprefs.inrialign_rho           = 'geman';
 csprefs.inrialign_cutoff        = 2.5;
 csprefs.inrialign_quality       = 1.0;
@@ -195,9 +207,9 @@ csprefs.reslice_write_imgs      = 1;
 csprefs.reslice_write_mean      = 1;
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_COREGISTER
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 
 % 1. csprefs.run_coreg: Runs coregister step if 1 is specified.
 % 2. csprefs.run_reslice: Runs reslice step if 1 is specified
@@ -229,7 +241,7 @@ csprefs.coreg.other_pattern = 's0*.img'; % Leave '' if you don't specify other i
 csprefs.coreg.write.ref = '/export/research/analysis/human/collaboration/olin/users/srinivas/testDicom/fsw050314990007.img';
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_SLICETIME
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % csprefs.slicetime_pattern     : specifies a pattern identifying which image files should be slicetimed. Literals and wildcards (*) only
@@ -250,13 +262,13 @@ csprefs.coreg.write.ref = '/export/research/analysis/human/collaboration/olin/us
 %                                   use the auto-calculated value (which is the time of one TR minus the time of one slice)
 
 
-csprefs.slicetime_pattern	=   'S*.nii';
-csprefs.sliceorder              = [1:1:36];
-csprefs.refslice                = 18;
+csprefs.slicetime_pattern	=   'rS*.nii';
+csprefs.sliceorder              = [1:1:29];
+csprefs.refslice                = 15;
 csprefs.ta                      = 'default';
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_NORMALIZE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % csprefs.determine_params      : whether to determine paramters (first step of normalization)
@@ -295,48 +307,48 @@ csprefs.ta                      = 'default';
 csprefs.determine_params        = 1;
 csprefs.write_normalized        = 1;
 csprefs.params_template         = '/export/mialab/users/salman/tools/spm12/toolbox/OldNorm/EPI.nii'; %'/opt/local/spm2/templates/EPI.mnc';
-csprefs.params_pattern          = 'meanaS*.nii';
+csprefs.params_pattern          = 'meanS*.nii';
 csprefs.params_source_weight    = '';
-csprefs.writenorm_pattern       = 'raS*.nii';
+csprefs.writenorm_pattern       = 'arS*.nii';
 csprefs.writenorm_matname       = '';
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_SMOOTH
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % csprefs.smooth_kernel         : size of Gaussian smoothing kernel, in mm
 % csprefs.smooth_pattern        : specifies a pattern identifying which image files should be smoothed. Literals and wildcards (*) only
 
-csprefs.smooth_kernel           = [6 6 6];
-csprefs.smooth_pattern          = 'wraS*.nii';
+csprefs.smooth_kernel           = [8 8 8];
+csprefs.smooth_pattern          = 'warS*.nii';
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_DETREND
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % csprefs.detrend_pattern       : 
 
-csprefs.detrend_pattern         = 'swraS*.nii';
+csprefs.detrend_pattern         = 'swarS*.nii';
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_FILTER
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % csprefs.filter_pattern        : pattern for images to filter. Wildcards (*) and literals only. If demand warrants, we can do this with regexp
 %                                   instead, but I doubt it's necessary
 % csprefs.cutoff_freq           : to be honest, I don't really know what this is
 
-csprefs.filter_pattern          = 'tswraS*.nii';
+csprefs.filter_pattern          = 'tswarS*.nii';
 csprefs.cutoff_freq             = .08;
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_DESPIKE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % csprefs.despike_bin           : 
 % csprefs.despike_pattern       : 
 
 csprefs.despike_bin             = '/export/mialab/users/salman/tools/center_scripts_v1.01/3dDespike';
-csprefs.despike_pattern         = 'ftswraS*.nii';
+csprefs.despike_pattern         = 'tswarS*.nii';
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_STATS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % csprefs.stats_make_asciis     : whether to run a script generating ASCII timing files from the subject's behavioral data
@@ -528,7 +540,7 @@ csprefs.stats_tcontrast_names   = { 'targets_vs_std_baseline';
     };
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_SPM_RESULTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -580,7 +592,7 @@ csprefs.spm_results.mask.thresh  = [0.05; 0.01; 0.001];
 % b. 1 - 'Exclusive'
 csprefs.spm_results.mask.mtype = 0;
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_AUTOSLICE
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % csprefs.autoslice_cons        : vector of contrast numbers (e.g. [4:6,9,10]) to autoslice
@@ -604,7 +616,7 @@ csprefs.autoslice_slices        = [-40:4:72];
 csprefs.autoslice_email_cons    = [8,9,12];
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_DERIVATIVE_BOOST
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % csprefs.dboost_overwrite_beta : whether or not to overwrite the original beta images (alternative is to create new images). 1 to overwrite, 0 to
@@ -646,7 +658,7 @@ csprefs.dboost_im_names         = { 'db_targets_mean.img';
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO SEGEMENTATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 csprefs.segment.pattern = 'w*.nii'; % file pattern 
