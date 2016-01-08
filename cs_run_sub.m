@@ -15,9 +15,9 @@ end
 % Get the SPM version
 spmVersion = spm('ver');
 
-if ~strcmpi(spmVersion, 'spm5')
+% if ~strcmpi(spmVersion, 'spm5')
 %     error(['This version of center scripts works only with spm5']);
-end
+% end
 
 if ~exist('prefs_files', 'var')
     error(['Preferences file/files is/are not specified']);
@@ -48,7 +48,7 @@ for ii = 1:length(prefs_files)
 
     %subDirs = cellstr(str2mat(allDirs(inds).name));
     
-    subDirs = cs_list_dirs(sub_dir, 'relative');    
+    subDirs = cs_list_dirs(sub_dir, 'relative');
     
     if ~isempty(subDirs)
         [inds] = regexp(subDirs, csprefs.scandir_regexp);           

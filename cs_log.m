@@ -1,11 +1,7 @@
 function cs_log( str, file, nodate )
 
-return;
-
-global csprefs;
-
 if ( nargin < 2 )
-    file=csprefs.logfile;
+    file='/export/mialab/users/salman/data/BSNIP/SubjectData/cs_log.txt';
 end
 
 if ( nargin < 3 )

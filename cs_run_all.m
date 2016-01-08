@@ -7,7 +7,7 @@ function cs_run_all( prefs_filename, sub_dir )
 % 2. sub_dir - fullfile path of the subject directory to be processed.
 %
 
-tic;
+tic
 global csprefs;
 global FILE_USEREGEXP;
 global defaults;
@@ -108,10 +108,13 @@ if (runDicom == 1) && ((csprefs.run_beh_matchup == 1) || (csprefs.run_reorient =
         if ~strcmp(origSubDir, dicomOutputDir)
             [sub_dir, good_im_dirs] = get_sub_dirs(fullfile(dicomOutputDir, subNum), scandir_postpend, csprefs.rundir_regexp, rundir_postpend);
         end
-    end
-    
+    end   
 end
 
+% start parallel pool with 8 workers
+if isempty( gcp('nocreate') )
+    parpool('local', 8);
+end
 
 % Loop over subject directories
 for nSub = 1:length(sub_dir)
@@ -134,15 +137,6 @@ for nSub = 1:length(sub_dir)
         cs_dummies(subject_directory, im_dirs);
     end
     
-    % Rename
-    if isfield(csprefs, 'run_rename')
-        if csprefs.run_rename
-            parfor i = 1:length(im_dirs)
-                cs_rename(im_dirs{i}, csprefs);
-            end
-        end
-    end
-    
     % Discard time points
     if isfield(csprefs, 'run_discard')
         if csprefs.run_discard
@@ -152,10 +146,19 @@ for nSub = 1:length(sub_dir)
         end
     end
     
+    % Rename
+    if isfield(csprefs, 'run_rename')
+        if csprefs.run_rename
+            parfor i = 1:length(im_dirs)
+                cs_rename(im_dirs{i}, csprefs);
+            end
+        end
+    end
+    
     % Reorientation
     if isfield(csprefs, 'run_reorient')
         if (csprefs.run_reorient)
-            for i = 1:length(im_dirs)
+            parfor i = 1:length(im_dirs)
                 cs_reorient(im_dirs{i});
             end
         end
@@ -198,9 +201,15 @@ for nSub = 1:length(sub_dir)
     
     % Detrending
     if csprefs.run_detrend
+        % start parallel pool with 4 workers, because detrend crashes with
+        % 8.
+        delete(gcp('nocreate'));
+        parpool('local', 4);
         parfor i=1:length(im_dirs)
             cs_detrend( im_dirs{i}, csprefs, defaults );
         end
+        delete(gcp('nocreate'));
+        parpool('local', 8);
     end
     
     % Filter
@@ -365,13 +374,14 @@ global csprefs;
 global defaults;
 
 % Realign
-if csprefs.run_realign
+if 1 || csprefs.run_realign
     cs_log('Moving realigned images', 'cs_progress.txt');
-    for i=1:length(im_dirs)
-        dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, 'realigned');
+    parfor i=1:length(im_dirs)
+        dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, '1.realigned');
         mkdir(dest);
         movefile( [im_dirs{i} filesep defaults.realign.write.prefix csprefs.realign_pattern], dest );
         movefile( [im_dirs{i} filesep 'sq_rp_S*.txt'], dest );
+        movefile( [im_dirs{i} filesep 'rp_S*.txt'], dest );
     end
 end
 
@@ -379,7 +389,7 @@ end
 if csprefs.run_slicetime
     cs_log('Moving slice time corrected images', 'cs_progress.txt');
     parfor i=1:length(im_dirs)
-        dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, 'slicetimed');
+        dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, '2.slicetimed');
         mkdir(dest);
         movefile( [im_dirs{i} filesep defaults.slicetiming.prefix csprefs.slicetime_pattern], dest );
     end
@@ -389,9 +399,10 @@ end
 if csprefs.run_normalize
     cs_log('Moving normalized images', 'cs_progress.txt');
     parfor i=1:length(im_dirs)
-        dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, 'normalized');
+        dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, '3.normalized');
         mkdir(dest);
         movefile( [im_dirs{i} filesep defaults.normalise.write.prefix csprefs.writenorm_pattern], dest );
+        movefile( [im_dirs{i} filesep 'meanS*'], dest );
     end
 end
 
@@ -399,7 +410,7 @@ end
 if csprefs.run_smooth
     cs_log('Moving smoothed images', 'cs_progress.txt');
     parfor i=1:length(im_dirs)
-        dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, 'smoothed');
+        dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, '4.smoothed');
         mkdir(dest);
         movefile( [im_dirs{i} filesep defaults.smooth.prefix csprefs.smooth_pattern], dest );
     end
@@ -408,20 +419,22 @@ end
 % Detrending
 if csprefs.run_detrend
     cs_log('Moving detrended images', 'cs_progress.txt');
+    dest = folderizeDestination(sub_dir, '', csprefs, '5.detrended');
+    [t1 t2] = fileparts(dest);
+    mkdir(t1);
     parfor i=1:length(im_dirs)
-        dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, 'detrended');
-        mkdir(dest);
-        movefile( [im_dirs{i} filesep defaults.detrend.prefix csprefs.detrend_pattern], dest );
+        movefile( [im_dirs{i} filesep defaults.detrend.prefix strrep( csprefs.detrend_pattern, '*', im_dirs{i} )], t1 );
     end
 end
 
 % Despike
 if csprefs.run_despike
     cs_log('Moving despiked images', 'cs_progress.txt');
+    dest = folderizeDestination(sub_dir, '', csprefs, '6.despiked');
+    [t1 t2] = fileparts(dest);
+    mkdir(t1);
     parfor i=1:length(im_dirs)
-        dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, 'despiked');
-        mkdir(dest);
-        movefile( [im_dirs{i} filesep defaults.despike.prefix csprefs.despike_pattern], dest );
+        movefile( [im_dirs{i} filesep defaults.despike.prefix strrep( csprefs.despike_pattern, '*', im_dirs{i} )], t1 );
     end
 end
 

@@ -18,7 +18,7 @@ end
 
 % todo handle img or compressed files
 FileList={};
-for j=1:length(V)
+for j=1:size(V,1)
     FileList{j,1} = V(j,:);
 end
 
