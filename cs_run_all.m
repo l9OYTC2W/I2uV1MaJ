@@ -214,8 +214,8 @@ for nSub = 1:length(sub_dir)
     
     % Filter
     if csprefs.run_filter
-        for i=1:length(im_dirs)
-            cs_filter( im_dirs{i} );
+        parfor i=1:length(im_dirs)
+            cs_filter( im_dirs{i}, csprefs );
         end
     end
     
@@ -374,7 +374,7 @@ global csprefs;
 global defaults;
 
 % Realign
-if 1 || csprefs.run_realign
+if csprefs.run_realign
     cs_log('Moving realigned images', 'cs_progress.txt');
     parfor i=1:length(im_dirs)
         dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, '1.realigned');
@@ -382,6 +382,7 @@ if 1 || csprefs.run_realign
         movefile( [im_dirs{i} filesep defaults.realign.write.prefix csprefs.realign_pattern], dest );
         movefile( [im_dirs{i} filesep 'sq_rp_S*.txt'], dest );
         movefile( [im_dirs{i} filesep 'rp_S*.txt'], dest );
+        movefile( [im_dirs{i} filesep 'meanS*'], dest );
     end
 end
 
@@ -402,7 +403,6 @@ if csprefs.run_normalize
         dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, '3.normalized');
         mkdir(dest);
         movefile( [im_dirs{i} filesep defaults.normalise.write.prefix csprefs.writenorm_pattern], dest );
-        movefile( [im_dirs{i} filesep 'meanS*'], dest );
     end
 end
 
@@ -419,22 +419,33 @@ end
 % Detrending
 if csprefs.run_detrend
     cs_log('Moving detrended images', 'cs_progress.txt');
-    dest = folderizeDestination(sub_dir, '', csprefs, '5.detrended');
-    [t1 t2] = fileparts(dest);
-    mkdir(t1);
     parfor i=1:length(im_dirs)
-        movefile( [im_dirs{i} filesep defaults.detrend.prefix strrep( csprefs.detrend_pattern, '*', im_dirs{i} )], t1 );
+        dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, '5.detrended');
+        mkdir(dest);
+        movefile( [im_dirs{i} filesep defaults.detrend.prefix strrep(csprefs.detrend_pattern, '*', im_dirs{i})], [im_dirs{i} filesep defaults.detrend.prefix strrep(csprefs.detrend_pattern, '*', 'fMRI')] );
+        movefile( [im_dirs{i} filesep defaults.detrend.prefix strrep(csprefs.detrend_pattern, '*', 'fMRI')], dest );
+    end
+end
+
+% Filter
+if csprefs.run_filter
+    cs_log('Moving filtered images', 'cs_progress.txt');
+    parfor i=1:length(im_dirs)
+        dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, '6.filtered');
+        mkdir(dest);
+        movefile( [im_dirs{i} filesep 'f' strrep(csprefs.filter_pattern, '*', im_dirs{i})], [im_dirs{i} filesep 'f' strrep(csprefs.filter_pattern, '*', 'fMRI')] );
+        movefile( [im_dirs{i} filesep 'f' strrep(csprefs.filter_pattern, '*', 'fMRI')], dest );
     end
 end
 
 % Despike
 if csprefs.run_despike
     cs_log('Moving despiked images', 'cs_progress.txt');
-    dest = folderizeDestination(sub_dir, '', csprefs, '6.despiked');
-    [t1 t2] = fileparts(dest);
-    mkdir(t1);
     parfor i=1:length(im_dirs)
-        movefile( [im_dirs{i} filesep defaults.despike.prefix strrep( csprefs.despike_pattern, '*', im_dirs{i} )], t1 );
+        dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, '7.despiked');
+        mkdir(dest);
+        movefile( [im_dirs{i} filesep defaults.despike.prefix strrep(csprefs.despike_pattern, '*', im_dirs{i})], [im_dirs{i} filesep defaults.despike.prefix strrep(csprefs.despike_pattern, '*', 'fMRI')] );
+        movefile( [im_dirs{i} filesep defaults.despike.prefix strrep(csprefs.despike_pattern, '*', 'fMRI')], dest );
     end
 end
 

@@ -1,5 +1,5 @@
 function cs_detrend( directory, csprefs, defaults )
-% Performs despiking on all images in a directory.
+% removes linear trend from images
 
 V = cs_list_files(fullfile(pwd, directory), csprefs.detrend_pattern, 'fullpath');
 if (isempty(V))

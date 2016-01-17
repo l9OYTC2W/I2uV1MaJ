@@ -1,6 +1,4 @@
-function cs_filter( directory )
-
-global csprefs;
+function cs_filter( directory, csprefs )
 
 %Adapted from filter_Images by Adrien Desjardins
 
@@ -11,7 +9,12 @@ if isempty(which('butter.m'))
     error('Need signal processing toolbox to do filtering');
 end
 
-[bfilter afilter]=butter(5,csprefs.cutoff_freq/((1/csprefs.tr)/2));
+if csprefs.cutoff_freq_low
+    [bfilter_high, afilter_high]=butter(5,csprefs.cutoff_freq_low/((1/csprefs.tr)/2));
+end
+if csprefs.cutoff_freq_high
+    [bfilter_low, afilter_low]=butter(5,csprefs.cutoff_freq_high/((1/csprefs.tr)/2));
+end
 
 files = cs_list_files(fullfile(pwd, directory), csprefs.filter_pattern, 'fullpath');
 
@@ -41,7 +44,12 @@ for slice = 1:(vol(1).dim(3))
     %%%%% do filtering here
     for x=1:(vol(1).dim(1))
         for y=1:(vol(1).dim(2))
-            data(x,y,:)=filtfilt(bfilter,afilter,data(x,y,:));
+            if csprefs.cutoff_freq_low
+                data(x,y,:)=filtfilt(bfilter_high,afilter_high,data(x,y,:));
+            end
+            if csprefs.cutoff_freq_high
+                data(x,y,:)=filtfilt(bfilter_low,afilter_low,data(x,y,:));
+            end
         end
     end
 
@@ -64,7 +72,6 @@ warning on;
 spm_progress_bar('Clear');
 
 cs_log( ['cs_filter completed for ',fullfile(pwd,directory)],                           progFile );
-cs_log( ['    csprefs.cutoff_freq = ', num2str(csprefs.cutoff_freq)],                   progFile, 1 );
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % THE FOLLOWING ARE BLATANTLY "ADAPTED" (STOLEN) FROM SPM_WRITE_SN     %

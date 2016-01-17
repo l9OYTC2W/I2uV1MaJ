@@ -36,7 +36,7 @@ csprefs.run_coregister          = 0;
 csprefs.run_normalize           = 1;
 csprefs.run_smooth              = 1;
 csprefs.run_detrend             = 1;
-csprefs.run_filter              = 0;
+csprefs.run_filter              = 1;
 csprefs.run_despike             = 1;
 csprefs.run_beh_matchup         = 0;
 csprefs.run_reorient            = 0;
@@ -263,8 +263,8 @@ csprefs.coreg.write.ref = '/export/research/analysis/human/collaboration/olin/us
 
 
 csprefs.slicetime_pattern	=   'rS*.nii';
-csprefs.sliceorder              = [2:2:60];
-csprefs.refslice                = 30;
+csprefs.sliceorder              = [2:2:30 1:2:30];
+csprefs.refslice                = 15;
 csprefs.ta                      = 'default';
 
 
@@ -336,7 +336,8 @@ csprefs.detrend_pattern         = 'swarS*.nii';
 % csprefs.cutoff_freq           : to be honest, I don't really know what this is
 
 csprefs.filter_pattern          = 'tswarS*.nii';
-csprefs.cutoff_freq             = .08;
+csprefs.cutoff_freq_low         = .01;
+csprefs.cutoff_freq_high        = .08;
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_DESPIKE
@@ -345,7 +346,7 @@ csprefs.cutoff_freq             = .08;
 % csprefs.despike_pattern       : 
 
 csprefs.despike_bin             = '/export/mialab/users/salman/tools/center_scripts_v1.01/3dDespike';
-csprefs.despike_pattern         = 'tswarS*.nii';
+csprefs.despike_pattern         = 'ftswarS*.nii';
 
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

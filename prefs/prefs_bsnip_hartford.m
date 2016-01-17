@@ -28,15 +28,15 @@ addpath(fileparts(which('display_slices.m')));
 % indicate 1 to run that step, 0 not to run it
 
 csprefs.run_dicom_convert       = 0;
-csprefs.run_discard             = 1;
-csprefs.run_rename              = 1;
-csprefs.run_realign             = 1;
-csprefs.run_slicetime           = 1;
+csprefs.run_discard             = 0;
+csprefs.run_rename              = 0;
+csprefs.run_realign             = 0;
+csprefs.run_slicetime           = 0;
 csprefs.run_coregister          = 0;
-csprefs.run_normalize           = 1;
-csprefs.run_smooth              = 1;
-csprefs.run_detrend             = 1;
-csprefs.run_filter              = 0;
+csprefs.run_normalize           = 0;
+csprefs.run_smooth              = 0;
+csprefs.run_detrend             = 0;
+csprefs.run_filter              = 1;
 csprefs.run_despike             = 1;
 csprefs.run_beh_matchup         = 0;
 csprefs.run_reorient            = 0;
@@ -70,9 +70,9 @@ csprefs.run_segment             = 0;
 %                               checks for files with realignment pattern.
 % csprefs.tr                    : very important: TR of scans, in seconds
 
-csprefs.exp_dir                 = '/export/mialab/users/salman/data/BSNIP/SubjectData/'; 
-csprefs.logfile                 = '/export/mialab/users/salman/data/BSNIP/SubjectData/cs_log.txt'; 
-csprefs.errorlog                = '/export/mialab/users/salman/data/BSNIP/SubjectData/cs_errorlog.txt'; 
+csprefs.exp_dir                 = '/export/mialab/users/salman/data/BSNIP/SubjectData/5.detrended/'; 
+csprefs.logfile                 = '/export/mialab/users/salman/data/BSNIP/SubjectData/5.detrended/cs_log.txt'; 
+csprefs.errorlog                = '/export/mialab/users/salman/data/BSNIP/SubjectData/5.detrended/cs_errorlog.txt'; 
 csprefs.spm_defaults_dir        = '/export/mialab/users/salman/tools/spm12';
 csprefs.scandir_regexp          = 'Hartford'; %'\<\d{8}_\d{6}_\d{8}\>';
 csprefs.rundir_regexp           = '.*'; % Match decimal number exactly
@@ -336,7 +336,8 @@ csprefs.detrend_pattern         = 'swarS*.nii';
 % csprefs.cutoff_freq           : to be honest, I don't really know what this is
 
 csprefs.filter_pattern          = 'tswarS*.nii';
-csprefs.cutoff_freq             = .08;
+csprefs.cutoff_freq_low         = .01;
+csprefs.cutoff_freq_high        = .08;
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_DESPIKE
@@ -345,7 +346,7 @@ csprefs.cutoff_freq             = .08;
 % csprefs.despike_pattern       : 
 
 csprefs.despike_bin             = '/export/mialab/users/salman/tools/center_scripts_v1.01/3dDespike';
-csprefs.despike_pattern         = 'tswarS*.nii';
+csprefs.despike_pattern         = 'ftswarS*.nii';
 
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
