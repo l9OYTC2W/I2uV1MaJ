@@ -29,7 +29,7 @@ addpath(fileparts(which('display_slices.m')));
 
 csprefs.run_dicom_convert       = 0;
 csprefs.run_discard             = 0;
-csprefs.run_rename              = 1;
+csprefs.run_rename              = 0;
 csprefs.run_realign             = 1;
 csprefs.run_slicetime           = 1;
 csprefs.run_coregister          = 0;
@@ -70,17 +70,17 @@ csprefs.run_segment             = 0;
 %                               checks for files with realignment pattern.
 % csprefs.tr                    : very important: TR of scans, in seconds
 
-csprefs.exp_dir                 = '/export/mialab/users/salman/BSNIP/SubjectData_spm12/'; 
-csprefs.logfile                 = '/export/mialab/users/salman/BSNIP/SubjectData_spm12/cs_log.txt'; 
-csprefs.errorlog                = '/export/mialab/users/salman/BSNIP/SubjectData_spm12/cs_errorlog.txt'; 
+csprefs.exp_dir                 = '/export/mialab/users/salman/COBRE/SubjectData_3d/'; 
+csprefs.logfile                 = '/export/mialab/users/salman/COBRE/SubjectData_3d/cs_log.txt'; 
+csprefs.errorlog                = '/export/mialab/users/salman/COBRE/SubjectData_3d/cs_errorlog.txt'; 
 csprefs.spm_defaults_dir        = '/export/mialab/users/salman/tools/spm12/';
-csprefs.scandir_regexp          = 'Dallas'; %'\<\d{8}_\d{6}_\d{8}\>';
+csprefs.scandir_regexp          = '0.unprocessed'; %'\<\d{8}_\d{6}_\d{8}\>';
 csprefs.rundir_regexp           = '.*'; % Match decimal number exactly
 csprefs.scandir_postpend        = ''; % Leave it as empty if subject directories don't have additional path like Study
 csprefs.rundir_postpend         = ''; % Leave it as empty if run directories don't have additional path like Original/Nifti
 csprefs.file_useregexp          = 0; % Option for using regular expressions for file pattern
 csprefs.dummyscans              = 0; % Option for moving dummy scans to dummies directory. Only files with realignment pattern (csprefs.realign_pattern) will be moved.
-csprefs.tr                      = 1.5;
+csprefs.tr                      = 2;
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_BEH_MATCHUP
@@ -127,7 +127,7 @@ csprefs.dicom.outputDir = ''; % Leave it as empty '' or [] if you want the files
 % csprefs.discard_timepoints    : 
 % csprefs.keep_original         :
 
-csprefs.discard_pattern         = 'S*.nii';
+csprefs.discard_pattern         = '*.nii';
 csprefs.discard_timepoints      = 6;
 csprefs.keep_original           = 0;
 
@@ -193,7 +193,7 @@ csprefs.write_reorient = 0;
 csprefs.coregister              = 1;
 csprefs.reslice                 = 1;
 csprefs.use_inrialign           = 1;
-csprefs.realign_pattern         = 'S*.nii';
+csprefs.realign_pattern         = 'F*.nii';
 csprefs.inrialign_rho           = 'geman';
 csprefs.inrialign_cutoff        = 2.5;
 csprefs.inrialign_quality       = 1.0;
@@ -262,8 +262,8 @@ csprefs.coreg.write.ref = '/export/research/analysis/human/collaboration/olin/us
 %                                   use the auto-calculated value (which is the time of one TR minus the time of one slice)
 
 
-csprefs.slicetime_pattern	=   'rS*.nii';
-csprefs.sliceorder              = 1:29;
+csprefs.slicetime_pattern	=   'rF*.nii';
+csprefs.sliceorder              = 1:33;
 csprefs.refslice                = 'middle';
 csprefs.ta                      = 'default';
 
@@ -307,9 +307,9 @@ csprefs.ta                      = 'default';
 csprefs.determine_params        = 1;
 csprefs.write_normalized        = 1;
 csprefs.params_template         = '/export/mialab/users/salman/tools/spm12/toolbox/OldNorm/EPI.nii'; %'/opt/local/spm2/templates/EPI.mnc';
-csprefs.params_pattern          = 'meanS*.nii';
+csprefs.params_pattern          = 'meanF*.nii';
 csprefs.params_source_weight    = '';
-csprefs.writenorm_pattern       = 'arS*.nii';
+csprefs.writenorm_pattern       = 'arF*.nii';
 csprefs.writenorm_matname       = '';
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -319,14 +319,14 @@ csprefs.writenorm_matname       = '';
 % csprefs.smooth_pattern        : specifies a pattern identifying which image files should be smoothed. Literals and wildcards (*) only
 
 csprefs.smooth_kernel           = [8 8 8];
-csprefs.smooth_pattern          = 'warS*.nii';
+csprefs.smooth_pattern          = 'warF*.nii';
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_DETREND
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % csprefs.detrend_pattern       : 
 
-csprefs.detrend_pattern         = 'swarS*.nii';
+csprefs.detrend_pattern         = 'swarF*.nii';
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_FILTER
@@ -335,7 +335,7 @@ csprefs.detrend_pattern         = 'swarS*.nii';
 %                                   instead, but I doubt it's necessary
 % csprefs.cutoff_freq           : to be honest, I don't really know what this is
 
-csprefs.filter_pattern          = 'tswarS*.nii';
+csprefs.filter_pattern          = 'tswarF*.nii';
 csprefs.cutoff_freq_low         = .01;
 csprefs.cutoff_freq_high        = .08;
 
@@ -346,7 +346,7 @@ csprefs.cutoff_freq_high        = .08;
 % csprefs.despike_pattern       : 
 
 csprefs.despike_bin             = '/export/mialab/users/salman/tools/center_scripts_v1.01/3dDespike';
-csprefs.despike_pattern         = 'ftswarS*.nii';
+csprefs.despike_pattern         = 'ftswarF*.nii';
 
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -28,15 +28,15 @@ addpath(fileparts(which('display_slices.m')));
 % indicate 1 to run that step, 0 not to run it
 
 csprefs.run_dicom_convert       = 0;
-csprefs.run_discard             = 0;
-csprefs.run_rename              = 0;
-csprefs.run_realign             = 0;
-csprefs.run_slicetime           = 0;
+csprefs.run_discard             = 1;
+csprefs.run_rename              = 1;
+csprefs.run_realign             = 1;
+csprefs.run_slicetime           = 1;
 csprefs.run_coregister          = 0;
-csprefs.run_normalize           = 0;
-csprefs.run_smooth              = 0;
-csprefs.run_detrend             = 0;
-csprefs.run_filter              = 0;
+csprefs.run_normalize           = 1;
+csprefs.run_smooth              = 1;
+csprefs.run_detrend             = 1;
+csprefs.run_filter              = 1;
 csprefs.run_despike             = 1;
 csprefs.run_beh_matchup         = 0;
 csprefs.run_reorient            = 0;
@@ -70,11 +70,11 @@ csprefs.run_segment             = 0;
 %                               checks for files with realignment pattern.
 % csprefs.tr                    : very important: TR of scans, in seconds
 
-csprefs.exp_dir                 = '/export/mialab/users/salman/data/BSNIP/SubjectData/5.detrended/'; 
-csprefs.logfile                 = '/export/mialab/users/salman/data/BSNIP/SubjectData/5.detrended/cs_log.txt'; 
-csprefs.errorlog                = '/export/mialab/users/salman/data/BSNIP/SubjectData/5.detrended/cs_errorlog.txt'; 
-csprefs.spm_defaults_dir        = '/export/mialab/users/salman/tools/spm12';
-csprefs.scandir_regexp          = 'Detroit_1570'; %'\<\d{8}_\d{6}_\d{8}\>';
+csprefs.exp_dir                 = '/export/mialab/users/salman/BSNIP/SubjectData_spm12/'; 
+csprefs.logfile                 = '/export/mialab/users/salman/BSNIP/SubjectData_spm12/cs_log.txt'; 
+csprefs.errorlog                = '/export/mialab/users/salman/BSNIP/SubjectData_spm12/cs_errorlog.txt'; 
+csprefs.spm_defaults_dir        = '/export/mialab/users/salman/tools/spm12/';
+csprefs.scandir_regexp          = 'Detroit_1570_TR'; %'\<\d{8}_\d{6}_\d{8}\>';
 csprefs.rundir_regexp           = '.*'; % Match decimal number exactly
 csprefs.scandir_postpend        = ''; % Leave it as empty if subject directories don't have additional path like Study
 csprefs.rundir_postpend         = ''; % Leave it as empty if run directories don't have additional path like Original/Nifti
@@ -263,7 +263,7 @@ csprefs.coreg.write.ref = '/export/research/analysis/human/collaboration/olin/us
 
 
 csprefs.slicetime_pattern	=   'rS*.nii';
-csprefs.sliceorder              = [1:1:29];
+csprefs.sliceorder              = 1:29;
 csprefs.refslice                = 'middle';
 csprefs.ta                      = 'default';
 

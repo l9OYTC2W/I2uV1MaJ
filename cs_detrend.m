@@ -6,10 +6,8 @@ if (isempty(V))
     error('No files found for detrending.');
 end
 
-orig_dir=pwd;
-cd(directory);
-progFile=fullfile(orig_dir,'cs_progress.txt');
-cs_log( ['Beginning cs_detrend for ',directory], progFile );
+progFile=fullfile(pwd,'cs_progress.txt');
+cs_log( ['Beginning cs_detrend for ',fullfile(pwd,directory)], progFile );
 
 % from DPARSFA_run.m written by YAN Chao-Gan
 if ~exist('CUTNUMBER','var')
@@ -27,7 +25,6 @@ fprintf('\nReading images from "%s" etc.\n', FileList{1});
 % todo handle 4D files
 
 % Read NIfTI file Based on SPM's nifti
-VolumeIndex = 'all';
 [pathstr, name, ext] = fileparts(FileList{1});
 
 Nii  = nifti(FileList{1});
@@ -54,18 +51,54 @@ end
 temp = inv(Header.mat)*[0,0,0,1]';
 Header.Origin = temp(1:3)';
 
-VoxelSize = sqrt(sum(Header.mat(1:3,1:3).^2));
-
 Data = zeros([size(Data),length(FileList)]);
 if prod([size(Data),length(FileList),8]) < 1024*1024*1024 %If data is with two many volumes, then it will be converted to the format 'single'.
     for j=1:length(FileList)
-        [DataTemp] = y_ReadRPI(FileList{j});
+        [pathstr, name, ext] = fileparts(FileList{j});
+
+        Nii  = nifti(FileList{j});
+        V = spm_vol(FileList{j});
+
+        DataTemp = double(Nii.dat);
+        Header_ = V(1);
+        Header_.fname=FileList{1};
+
+        if sum(sum(Header_.mat(1:3,1:3)-diag(diag(Header_.mat(1:3,1:3)))~=0))==0 % If the image has no rotation (no non-diagnol element in affine matrix), then transform to RPI coordination.
+            if Header_.mat(1,1)>0 %R
+                DataTemp = flipdim(DataTemp,1);
+            end
+            if Header_.mat(2,2)<0 %P
+                DataTemp = flipdim(DataTemp,2);
+            end
+            if Header_.mat(3,3)<0 %I
+                DataTemp = flipdim(DataTemp,3);
+            end
+        end
         Data(:,:,:,j) = DataTemp;
     end
 else
     Data = single(Data);
     for j=1:length(FileList)
-        [DataTemp] = y_ReadRPI(FileList{j});
+        [pathstr, name, ext] = fileparts(FileList{j});
+
+        Nii  = nifti(FileList{j});
+        V = spm_vol(FileList{j});
+
+        DataTemp = double(Nii.dat);
+        Header_ = V(1);
+        Header_.fname=FileList{1};
+
+        if sum(sum(Header_.mat(1:3,1:3)-diag(diag(Header_.mat(1:3,1:3)))~=0))==0 % If the image has no rotation (no non-diagnol element in affine matrix), then transform to RPI coordination.
+            if Header_.mat(1,1)>0 %R
+                DataTemp = flipdim(DataTemp,1);
+            end
+            if Header_.mat(2,2)<0 %P
+                DataTemp = flipdim(DataTemp,2);
+            end
+            if Header_.mat(3,3)<0 %I
+                DataTemp = flipdim(DataTemp,3);
+            end
+        end
         Data(:,:,:,j) = single(DataTemp);
     end
 end
@@ -127,4 +160,3 @@ end
 create(NIfTIObject);
 dat(:,:,:,:)=Data;
 
-cd(orig_dir);

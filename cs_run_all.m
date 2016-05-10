@@ -201,15 +201,9 @@ for nSub = 1:length(sub_dir)
     
     % Detrending
     if csprefs.run_detrend
-        % start parallel pool with 4 workers, because detrend crashes with
-        % 8.
-        delete(gcp('nocreate'));
-        parpool('local', 4);
         parfor i=1:length(im_dirs)
             cs_detrend( im_dirs{i}, csprefs, defaults );
         end
-        delete(gcp('nocreate'));
-        parpool('local', 8);
     end
     
     % Filter
@@ -380,9 +374,9 @@ if csprefs.run_realign
         dest = folderizeDestination(sub_dir, im_dirs{i}, csprefs, '1.realigned');
         mkdir(dest);
         movefile( [im_dirs{i} filesep defaults.realign.write.prefix csprefs.realign_pattern], dest );
-        movefile( [im_dirs{i} filesep 'sq_rp_S*.txt'], dest );
-        movefile( [im_dirs{i} filesep 'rp_S*.txt'], dest );
-        movefile( [im_dirs{i} filesep 'meanS*'], dest );
+        movefile( [im_dirs{i} filesep 'sq_rp_F*.txt'], dest );
+        movefile( [im_dirs{i} filesep 'rp_F*.txt'], dest );
+        movefile( [im_dirs{i} filesep 'meanF*'], dest );
     end
 end
 
@@ -450,7 +444,13 @@ if csprefs.run_despike
 end
 
 function str = folderizeDestination(sub_dir, im_dir, csprefs, step)
-str = strsplit(im_dir, '_');
-str = str(end);
-[t1 t2] = fileparts(sub_dir{1});
-str = [csprefs.exp_dir filesep step filesep t2 filesep str{1}];
+% % BSNIP
+% str = strsplit(im_dir, '_');
+% str = str(end);
+% [t1 t2] = fileparts(sub_dir{1});
+% str = [csprefs.exp_dir filesep step filesep t2 filesep str{1}];
+
+% COBRE
+str = [csprefs.exp_dir filesep step filesep im_dir];
+
+

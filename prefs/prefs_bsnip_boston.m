@@ -28,9 +28,9 @@ addpath(fileparts(which('display_slices.m')));
 % indicate 1 to run that step, 0 not to run it
 
 csprefs.run_dicom_convert       = 0;
-csprefs.run_discard             = 1;
-csprefs.run_rename              = 1;
-csprefs.run_realign             = 1;
+csprefs.run_discard             = 0;
+csprefs.run_rename              = 0;
+csprefs.run_realign             = 0;
 csprefs.run_slicetime           = 1;
 csprefs.run_coregister          = 0;
 csprefs.run_normalize           = 1;
@@ -70,10 +70,10 @@ csprefs.run_segment             = 0;
 %                               checks for files with realignment pattern.
 % csprefs.tr                    : very important: TR of scans, in seconds
 
-csprefs.exp_dir                 = '/export/mialab/users/salman/data/BSNIP/SubjectData/'; 
-csprefs.logfile                 = '/export/mialab/users/salman/data/BSNIP/SubjectData/cs_log.txt'; 
-csprefs.errorlog                = '/export/mialab/users/salman/data/BSNIP/SubjectData/cs_errorlog.txt'; 
-csprefs.spm_defaults_dir        = '/export/mialab/users/salman/tools/spm12';
+csprefs.exp_dir                 = '/export/mialab/users/salman/BSNIP/SubjectData_spm12/1.realigned/'; 
+csprefs.logfile                 = '/export/mialab/users/salman/BSNIP/SubjectData_spm12/1.realigned/cs_log.txt'; 
+csprefs.errorlog                = '/export/mialab/users/salman/BSNIP/SubjectData_spm12/1.realigned/cs_errorlog.txt'; 
+csprefs.spm_defaults_dir        = '/export/mialab/users/salman/tools/spm12/';
 csprefs.scandir_regexp          = 'Boston'; %'\<\d{8}_\d{6}_\d{8}\>';
 csprefs.rundir_regexp           = '.*'; % Match decimal number exactly
 csprefs.scandir_postpend        = ''; % Leave it as empty if subject directories don't have additional path like Study
@@ -264,7 +264,7 @@ csprefs.coreg.write.ref = '/export/research/analysis/human/collaboration/olin/us
 
 csprefs.slicetime_pattern	=   'rS*.nii';
 csprefs.sliceorder              = [2:2:30 1:2:30];
-csprefs.refslice                = 15;
+csprefs.refslice                = 'middle';
 csprefs.ta                      = 'default';
 
 

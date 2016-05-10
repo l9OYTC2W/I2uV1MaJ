@@ -29,14 +29,14 @@ addpath(fileparts(which('display_slices.m')));
 
 csprefs.run_dicom_convert       = 0;
 csprefs.run_discard             = 0;
-csprefs.run_rename              = 1;
+csprefs.run_rename              = 0;
 csprefs.run_realign             = 1;
-csprefs.run_slicetime           = 1;
+csprefs.run_slicetime           = 0;
 csprefs.run_coregister          = 0;
-csprefs.run_normalize           = 1;
-csprefs.run_smooth              = 1;
-csprefs.run_detrend             = 1;
-csprefs.run_filter              = 1;
+csprefs.run_normalize           = 0;
+csprefs.run_smooth              = 0;
+csprefs.run_detrend             = 0;
+csprefs.run_filter              = 0;
 csprefs.run_despike             = 1;
 csprefs.run_beh_matchup         = 0;
 csprefs.run_reorient            = 0;
@@ -70,17 +70,17 @@ csprefs.run_segment             = 0;
 %                               checks for files with realignment pattern.
 % csprefs.tr                    : very important: TR of scans, in seconds
 
-csprefs.exp_dir                 = '/export/mialab/users/salman/BSNIP/SubjectData_spm12/'; 
-csprefs.logfile                 = '/export/mialab/users/salman/BSNIP/SubjectData_spm12/cs_log.txt'; 
-csprefs.errorlog                = '/export/mialab/users/salman/BSNIP/SubjectData_spm12/cs_errorlog.txt'; 
+csprefs.exp_dir                 = '/export/mialab/users/salman/BSNIP/despike_test/'; 
+csprefs.logfile                 = '/export/mialab/users/salman/BSNIP/despike_test/cs_log.txt'; 
+csprefs.errorlog                = '/export/mialab/users/salman/BSNIP/despike_test/cs_errorlog.txt'; 
 csprefs.spm_defaults_dir        = '/export/mialab/users/salman/tools/spm12/';
-csprefs.scandir_regexp          = 'Dallas'; %'\<\d{8}_\d{6}_\d{8}\>';
+csprefs.scandir_regexp          = '1'; %'\<\d{8}_\d{6}_\d{8}\>';
 csprefs.rundir_regexp           = '.*'; % Match decimal number exactly
 csprefs.scandir_postpend        = ''; % Leave it as empty if subject directories don't have additional path like Study
 csprefs.rundir_postpend         = ''; % Leave it as empty if run directories don't have additional path like Original/Nifti
 csprefs.file_useregexp          = 0; % Option for using regular expressions for file pattern
 csprefs.dummyscans              = 0; % Option for moving dummy scans to dummies directory. Only files with realignment pattern (csprefs.realign_pattern) will be moved.
-csprefs.tr                      = 1.5;
+csprefs.tr                      = 2.21;
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SETTINGS PERTAINING TO CS_BEH_MATCHUP
@@ -193,7 +193,7 @@ csprefs.write_reorient = 0;
 csprefs.coregister              = 1;
 csprefs.reslice                 = 1;
 csprefs.use_inrialign           = 1;
-csprefs.realign_pattern         = 'S*.nii';
+csprefs.realign_pattern         = 'dS*.nii';
 csprefs.inrialign_rho           = 'geman';
 csprefs.inrialign_cutoff        = 2.5;
 csprefs.inrialign_quality       = 1.0;
@@ -203,8 +203,8 @@ csprefs.realign_rtm             = 0;
 csprefs.realign_pw              = '';
 %INRIAlign has a 'hold' flag, spm_realign has an 'interp' flag... for right now I'm just leaving them alone. INRIAlign will use its defaults,
 %spm_realign will use the value set in spm_defaults.m
-csprefs.reslice_write_imgs      = 1;
-csprefs.reslice_write_mean      = 1;
+csprefs.reslice_write_imgs      = 0;
+csprefs.reslice_write_mean      = 0;
 
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -263,7 +263,7 @@ csprefs.coreg.write.ref = '/export/research/analysis/human/collaboration/olin/us
 
 
 csprefs.slicetime_pattern	=   'rS*.nii';
-csprefs.sliceorder              = 1:29;
+csprefs.sliceorder              = [1:2:36 2:2:36];
 csprefs.refslice                = 'middle';
 csprefs.ta                      = 'default';
 
@@ -346,7 +346,7 @@ csprefs.cutoff_freq_high        = .08;
 % csprefs.despike_pattern       : 
 
 csprefs.despike_bin             = '/export/mialab/users/salman/tools/center_scripts_v1.01/3dDespike';
-csprefs.despike_pattern         = 'ftswarS*.nii';
+csprefs.despike_pattern         = 'S*.nii';
 
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

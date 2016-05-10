@@ -74,7 +74,6 @@ if (csprefs.determine_params)
     cs_log( ['    flags.cutoff = ', num2str(flags.cutoff) ],                                    progFile, 1 );
     cs_log( ['    flags.nits = ', num2str(flags.nits) ],                                        progFile, 1 );
     cs_log( ['    flags.reg = ', num2str(flags.reg) ],                                          progFile, 1 );
-    cs_log( ['    flags.wtsrc = ', num2str(flags.wtsrc) ],                                      progFile, 1 );
 
 end
 
@@ -94,7 +93,7 @@ if (csprefs.write_normalized)
             error( 'Incorrect # of files specified by csprefs.writenorm_matname' );
         end
     end
-    flags                       = defaults.old.normalise.write;
+    flags                       = defaults.normalise.write;
 
     spm_write_sn( V,matname,flags );
 
@@ -104,7 +103,7 @@ if (csprefs.write_normalized)
     cs_log( ['    flags.bb = ', mat2str(flags.bb) ],                                            progFile, 1 );
     cs_log( ['    flags.vox = ', mat2str(flags.vox) ],                                          progFile, 1 );
     cs_log( ['    flags.interp = ', num2str(flags.interp) ],                                    progFile, 1 );
-    cs_log( ['    flags.wrap = ', mat2str(flags.wrap) ],                                        progFile, 1 );
+%     cs_log( ['    flags.wrap = ', mat2str(flags.wrap) ],                                        progFile, 1 );
 
 end
 

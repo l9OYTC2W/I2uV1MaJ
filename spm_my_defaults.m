@@ -12,5 +12,4 @@ defaults.despike.prefix                 = 'd';
 defaults.detrend.prefix                 = 't';
 
 defaults.normalise.write.vox            = [3 3 3];
-defaults.normalise.write.vox            = [3 3 3];
 defaults.old.normalise.write.vox        = [3 3 3];

@@ -1,7 +1,7 @@
 function cs_log( str, file, nodate )
 
 if ( nargin < 2 )
-    file='/export/mialab/users/salman/data/BSNIP/SubjectData/cs_log.txt';
+    file='/export/mialab/users/salman/BSNIP/SubjectData_spm12/cs_log.txt';
 end
 
 if ( nargin < 3 )
